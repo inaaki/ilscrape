@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 import sys
 
 
@@ -25,11 +25,12 @@ URLs = URLs.split()
 SEARCH_TAGS = SEARCH_TAGS.split()
 
 
-
 def print_image_links(url, search_terms):
-
-    with urlopen(url) as page:
-        page_content = page.read()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'}
+    req = Request(url, headers=headers)
+    with urlopen(req) as page:
+        page_content = page.read().decode('utf-8')
 
     # create soup container
     soup = BeautifulSoup(page_content, 'html.parser')
