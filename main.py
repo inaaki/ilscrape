@@ -1,6 +1,7 @@
+from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
-from bs4 import BeautifulSoup
+import sys
 
 
 def is_searched(soup_img, terms) -> bool:
@@ -18,8 +19,11 @@ def define_path(url, link):
     return urljoin(url, link)
 
 
-SEARCH_TAGS = ['coffee', 'blue', 'sky', 'flower', 'computer', 'table', '354']
-URLS = ['https://unsplash.com/', 'https://picsum.photos/']
+URLs = sys.argv[1]
+SEARCH_TAGS = sys.argv[2]
+URLs = URLs.split()
+SEARCH_TAGS = SEARCH_TAGS.split()
+
 
 
 def print_image_links(url, search_terms):
@@ -46,5 +50,5 @@ def print_image_links(url, search_terms):
         print(f"\nNo Photos found on {url}\n")
 
 
-for url in URLS:
+for url in URLs:
     print_image_links(url, SEARCH_TAGS)
