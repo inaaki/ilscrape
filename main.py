@@ -1,3 +1,4 @@
+from urllib.parse import urljoin, urlparse
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
@@ -10,8 +11,15 @@ def is_searched(soup_img, terms) -> bool:
     return any(word in target for word in terms)
 
 
-SEARCH_TAGS = ['coffee', 'blue', 'sky', 'flower', 'computer', 'table']
-URLS = ['https://unsplash.com/', 'https://www.shutterstock.com/images']
+def define_path(url, link):
+    # convert relative path to an absolute one
+    if link and urlparse(link).netloc:
+        return link
+    return urljoin(url, link)
+
+
+SEARCH_TAGS = ['coffee', 'blue', 'sky', 'flower', 'computer', 'table', '354']
+URLS = ['https://unsplash.com/', 'https://picsum.photos/']
 
 
 def print_image_links(url, search_terms):
@@ -27,11 +35,12 @@ def print_image_links(url, search_terms):
     filtered_image = [img for img in images if is_searched(img, search_terms)]
 
     # extracting links from filtered images
-    img_links = [img.get('src') for img in filtered_image if img.get('src')]
+    img_links = [define_path(url, img.get('src'))
+                 for img in filtered_image if img.get('src')]
 
     if img_links:
+        print(f'\nPhotos from {url}')
         for link in img_links:
-            print(f'\nPhotos from {url}')
             print(link)
     else:
         print(f"\nNo Photos found on {url}\n")
